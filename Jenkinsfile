@@ -11,7 +11,7 @@ pipeline {
     }
     stage('Test') {
       steps {
-        sh 'jest'
+        sh 'npx jest'
       }
     }
     stage('Deploy') {
