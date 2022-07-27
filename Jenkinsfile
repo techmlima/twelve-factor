@@ -11,7 +11,7 @@ pipeline {
     }
     stage('Test') {
       steps {
-        sh 'npx jest'
+        sh 'npx jest --detectOpenHandles --silent'
       }
     }
     stage('Deploy') {
