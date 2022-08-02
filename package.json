@@ -1,7 +1,7 @@
 {
     "name": "twelve-factor",
     "description": "Project exemple Twelve-Factor APP",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": "server.js",
     "author": "Marcos Lima",
     "license": "ISC",
