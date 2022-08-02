@@ -4,4 +4,4 @@ const { port } = require('./config');
 
 const server = http.createServer(app);
 
-server.listen(port);
+server.listen(port || 3000);
