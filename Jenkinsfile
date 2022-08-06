@@ -10,7 +10,6 @@ pipeline {
 
     stage('Install dependencies') {
       steps {
-        sh 'sudo rm -R ./node_modules'
         sh 'npm install'
       }
     }
