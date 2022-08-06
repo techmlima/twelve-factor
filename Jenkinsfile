@@ -10,10 +10,12 @@ pipeline {
 
     stage('Install dependencies') {
       steps {
+         script {
         echo 'teste'
         ABCSFSDFA = sh(returnStdout:  true, script: "git for-each-ref --count=1 --sort=-taggerdate --format '%(tag)' refs/tags ").trim()
         echo "${ABCSFSDFA}"
         sh 'npm install'
+         }
       }
     }
 
