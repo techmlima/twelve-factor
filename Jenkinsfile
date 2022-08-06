@@ -34,12 +34,10 @@ pipeline {
           withCredentials([gitUsernamePassword(credentialsId: 'techmlima-github')]) {
             sh """
               set +x /* Hiding commands */
-
               git fetch --all --tags
-              TAG_NAME = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
-
               set -x /* Showing commands */
             """
+            TAG_NAME = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
           }
         }   
       }
