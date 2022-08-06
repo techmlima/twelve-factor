@@ -2,7 +2,8 @@ pipeline {
   agent any
   tools {nodejs "node16"}  
   environment {
-      REPOSITORY_URI = "${AWS_ACCESS_KEY_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/twelve-factor-app"
+    REPOSITORY_NAME = 'twelve-factor-app'
+    REPOSITORY_URI = "${AWS_ACCESS_KEY_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${REPOSITORY_NAME}:"
   }
   
   stages {
@@ -24,8 +25,7 @@ pipeline {
       steps {
         script {
             IMAGE_TAG = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
-            REPOSITORY_TAG = "$REPOSITORY_NAME:$IMAGE_TAG"
-            docker.build "$REPOSITORY_TAG"
+            docker.build "$REPOSITORY_NAME"
         }   
       }
     }
@@ -45,7 +45,7 @@ pipeline {
                 sh """
                     set +x /* Hiding commands */
                     
-                    docker tag $REPOSITORY_URI$IMAGE_TAG $REPOSITORY_TAG
+                    docker tag $REPOSITORY_URI$IMAGE_TAG $REPOSITORY_NAME
                     docker push $REPOSITORY_URI$IMAGE_TAG
                     
                     set -x /* Showing commands */
