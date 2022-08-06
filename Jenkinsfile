@@ -23,7 +23,7 @@ pipeline {
     stage('Build Image') {
       steps {
         script {
-          IMAGE_TAG = sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
+          IMAGE_TAG = sh(returnStdout: true, script: "git describe --tags --abbrev=0").trim()
           echo "${IMAGE_TAG}"
           docker.build "${REPOSITORY_NAME}"
         }   
