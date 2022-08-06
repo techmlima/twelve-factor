@@ -24,6 +24,7 @@ pipeline {
       steps {
         script {
           IMAGE_TAG = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+          echo "${IMAGE_TAG}"
           docker.build "${REPOSITORY_NAME}"
         }   
       }
@@ -38,10 +39,12 @@ pipeline {
 
         steps {
             script { 
+             echo "${IMAGE_TAG}"
              docker.withRegistry(
                 'https://${AWS_ACCESS_KEY_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com', 
                 "ecr:$AWS_DEFAULT_REGION:aws_jenkins") {
                 sh """
+                   echo ${IMAGE_TAG}
                     set +x /* Hiding commands */
                     
                     docker tag ${REPOSITORY_NAME} ${REPOSITORY_URI}${IMAGE_TAG}
