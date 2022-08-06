@@ -23,16 +23,28 @@ pipeline {
     stage('Build Image') {
       steps {
         script {
-          withCredentials([gitUsernamePassword(credentialsId: 'techmlima-github')]) {
-            sh 'git fetch --all --tags'
-            IMAGE_TAG = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
-            echo "${IMAGE_TAG}"
-          }
-          
           docker.build "${REPOSITORY_NAME}"
         }   
       }
     }
+
+    stage('Get Last tag') {
+      steps {
+        script {
+          withCredentials([gitUsernamePassword(credentialsId: 'techmlima-github')]) {
+            sh """
+              set +x /* Hiding commands */
+
+              git fetch --all --tags
+              TAG_NAME = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
+
+              set -x /* Showing commands */
+            """
+          }
+        }   
+      }
+    }
+    
     
     stage('Push Image') {
         // when {
@@ -42,17 +54,15 @@ pipeline {
         // }
 
         steps {
-            script { 
-             echo "${IMAGE_TAG}"
+            script {
              docker.withRegistry(
                 'https://${AWS_ACCESS_KEY_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com', 
                 "ecr:$AWS_DEFAULT_REGION:aws_jenkins") {
                 sh """
-                   echo ${IMAGE_TAG}
                     set +x /* Hiding commands */
                     
-                    docker tag ${REPOSITORY_NAME} ${REPOSITORY_URI}${IMAGE_TAG}
-                    docker push ${REPOSITORY_URI}${IMAGE_TAG}
+                    docker tag ${REPOSITORY_NAME} ${REPOSITORY_URI}${TAG_NAME}
+                    docker push ${REPOSITORY_URI}${TAG_NAME}
                     
                     set -x /* Showing commands */
                 """
