@@ -23,7 +23,8 @@ pipeline {
     stage('Build Image') {
       steps {
         script {
-          withCredentials([gitUsernamePassword(credentialsId: 'techmlima-github', gitToolName: 'git-tool')]) {
+          withCredentials([gitUsernamePassword(credentialsId: 'techmlima-github')]) {
+            sh 'git fetch --all --tags'
             IMAGE_TAG = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
             echo "${IMAGE_TAG}"
           }
