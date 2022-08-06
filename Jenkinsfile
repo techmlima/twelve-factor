@@ -24,7 +24,7 @@ pipeline {
       steps {
         script {
           withCredentials([gitUsernamePassword(credentialsId: 'techmlima-github', gitToolName: 'git-tool')]) {
-            IMAGE_TAG = sh(returnStdout: true, script: "git describe --tags --abbrev=0").trim()
+            IMAGE_TAG = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
             echo "${IMAGE_TAG}"
           }
           
