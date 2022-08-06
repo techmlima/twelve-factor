@@ -11,7 +11,8 @@ pipeline {
     stage('Install dependencies') {
       steps {
         echo 'teste'
-        echo sh(returnStdout:  true, script: "git for-each-ref --count=1 --sort=-taggerdate --format '%(tag)' refs/tags ").trim()
+        teste = sh(returnStdout:  true, script: "git for-each-ref --count=1 --sort=-taggerdate --format '%(tag)' refs/tags ").trim()
+        echo "${teste}"
         sh 'npm install'
       }
     }
