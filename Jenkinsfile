@@ -24,8 +24,8 @@ pipeline {
       steps {
         script {
             IMAGE_TAG = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
-            REPOSITORY_URI_TAG = "{$REPOSITORY_URI}:{$IMAGE_TAG}"
-            docker.build "{$REPOSITORY_URI_TAG}"
+            REPOSITORY_TAG = "$REPOSITORY_NAME:$IMAGE_TAG"
+            docker.build "$REPOSITORY_TAG"
         }   
       }
     }
@@ -52,7 +52,7 @@ pipeline {
                 """
             }
           }
-      }
+        }
     }
   }
 }
