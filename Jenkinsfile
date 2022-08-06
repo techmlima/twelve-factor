@@ -7,7 +7,6 @@ pipeline {
   }
   
   stages {
-
     stage('Install dependencies') {
       steps {
         sh 'npm install'
@@ -28,7 +27,7 @@ pipeline {
       }
     }
 
-    stage('Get Last tag') {
+    stage('Get Tag') {
       steps {
         script {
           withCredentials([gitUsernamePassword(credentialsId: 'techmlima-github')]) {
@@ -43,13 +42,12 @@ pipeline {
       }
     }
     
-    
     stage('Push Image') {
-        // when {
-        //     expression {
-        //         env.BRANCH_NAME == 'main'
-        //      }
-        // }
+        when {
+            expression {
+                env.BRANCH_NAME == 'main'
+             }
+        }
 
         steps {
             script {
@@ -57,11 +55,9 @@ pipeline {
                 'https://${AWS_ACCESS_KEY_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com', 
                 "ecr:$AWS_DEFAULT_REGION:aws_jenkins") {
                 sh """
-                    set +x /* Hiding commands */
-                    
+                    set +x /* Hiding commands */                    
                     docker tag ${REPOSITORY_NAME} ${REPOSITORY_URI}${TAG_NAME}
-                    docker push ${REPOSITORY_URI}${TAG_NAME}
-                    
+                    docker push ${REPOSITORY_URI}${TAG_NAME}                    
                     set -x /* Showing commands */
                 """
             }
